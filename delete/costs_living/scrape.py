@@ -8,15 +8,24 @@ from bs4 import BeautifulSoup
 import json
 URL = "https://www.numbeo.com/cost-of-living/"
 
+
 class Extract_table:
     """ Extracts the table from the beautiful soup html page"""
+
     def __init__(self, page):
         self.Data = {}
-        self.Table = page.find("table", {'class':'data_wide_table'}) #finding table with class name
+        self.Table = page.find("table", {'class': 'data_wide_table'})
+
+        #print(page.find_all('span', {"class": "emp_number"})[0].text)
+        try:
+            print(page.find_all('span', {"class": "emp_number"})[1].text)
+        except:
+            pass
+
     def extract(self):
         """A method to extract the table contents and store to a dict"""
         if not self.Table:
-            return None #check if it is in the formate.
+            return None  # check if it is in the formate.
         for row in self.Table("tr"):
             if row("th"):
                 key = row("th")[0].text
@@ -25,8 +34,10 @@ class Extract_table:
                 self.Data[key].append([cell.text for cell in row("td")])
         return self.Data
 
+
 class API(object):
     """API to get a country"""
+
     def __init__(self, BASE_URL, Country, city=0):
         self.base = BASE_URL
         self.url = BASE_URL+"country_result.jsp?country="+Country
@@ -73,8 +84,9 @@ class API(object):
         country = self.country
         self.result[country]["child"] = {}
         for city in self.city:
-            print("crawling Country -> %s, city -> %s"%(country, city))
+            print("crawling Country -> %s, city -> %s" % (country, city))
             self.result[country]["child"][city] = self.get_single_city(city)
+
 
 def write_json(FILE, OBJECT):
     """ Function to store as a json file"""
@@ -82,11 +94,12 @@ def write_json(FILE, OBJECT):
         w.write(json.dumps(OBJECT))
     print("The file has written ...")
 
+
 if __name__ == "__main__":
     COUNTRY = ['Netherlands']
     results = {}
-    city = 1 #set 1 to crawl all city
+    city = 1  # set 1 to crawl all city
     for i in COUNTRY:
         obj = API(URL, i, city)
         results[i] = obj.get_result()
-    write_json("results.json",results) #uncomment to save the results.
+    write_json("results.json", results)  # uncomment to save the results.
