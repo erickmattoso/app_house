@@ -54,7 +54,7 @@ def scrape_web(url):
     html = driver.page_source
     html_soup = BeautifulSoup(html)
     driver.close()
-    return html_soup, 'hdr'
+    return html_soup
 
 
 # variables
@@ -68,7 +68,7 @@ for url in urls:
     print(">>>>>>>>>", i, url)
     description_1 = {}
     try:
-        html_soup, hdr = scrape_web(url)
+        html_soup = scrape_web(url)
         key1, val1 = key_val("Offered since")
         key2, val2 = key_val("Available")
         description_1.update({
