@@ -12,7 +12,7 @@ from scipy import spatial
 
 # read data from our database
 df_pararius_coo = pd.read_csv(
-    '../data/processed/df_coo_pararius.csv', index_col=[0])
+    '../data/processed/df_pararius.csv', index_col=[0])
 # read train station data in europe
 link1 = 'https://github.com/trainline-eu/stations/blob/master/stations.csv'
 link2 = 'https://raw.githubusercontent.com/trainline-eu/stations/master/stations.csv'
@@ -57,5 +57,6 @@ clc_train = df_pararius_coo['train']
 # calculation of priority
 df_pararius_coo['deal'] = (
     (clc_area + clc_room + clc_garden) / (clc_price + clc_train))
+
 # saving the data
-df_pararius_coo.to_csv('../data/processed/df_coo_pararius.csv')
+df_pararius_coo.to_csv('../data/processed/df_pararius.csv')

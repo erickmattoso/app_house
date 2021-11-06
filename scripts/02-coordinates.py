@@ -123,5 +123,5 @@ zipcode_pararius_coo['img'] = "<a href=" + zipcode_pararius_coo['url'] + " targe
     zipcode_pararius_coo['image'] + \
     " title='rent' width='150' height='100'/></a>"
 # saving data
-zipcode_pararius_coo.to_csv('../data/processed/df_coo_pararius.csv')
+zipcode_pararius_coo.to_csv('../data/processed/df_pararius.csv')
 zipcode.to_csv('../data/raw/zipcode.csv')

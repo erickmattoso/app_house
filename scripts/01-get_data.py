@@ -16,6 +16,7 @@ import pandas as pd
 # getting today date
 today = date.today()
 
+
 def scrape_web(url):
     """
         the purpose of the function is to scrape a page
@@ -68,17 +69,16 @@ for count in range(1, num_pages+1):
     # flag
     print(">>>>>>>>>", count)
 
-    while validator is None:
-        # scraper
-        html_soup = scrape_web((url + str(count)))
-        # didn't find a content, so it will run the scrape with another agent
-        validator = 'Not Null'
-        # get all ads
-        house_data = html_soup.find_all(
-            'li', class_="search-list__item search-list__item--listing")
-        # save ads in a list
-        houses.append(house_data)
-        print('saved')
+    # scraper
+    html_soup = scrape_web((url + str(count)))
+    # didn't find a content, so it will run the scrape with another agent
+    validator = 'Not Null'
+    # get all ads
+    house_data = html_soup.find_all(
+        'li', class_="search-list__item search-list__item--listing")
+    # save ads in a list
+    houses.append(house_data)
+    print('saved')
 
 # variables
 price_ = []

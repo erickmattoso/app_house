@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 pop = pd.read_csv("../data/raw/nl3.csv", sep=',', index_col=[0])
-dash = pd.read_csv('../data/processed/df_coo_pararius.csv', index_col=[0])
+dash = pd.read_csv('../data/processed/df_pararius.csv', index_col=[0])
 postcode = pd.read_csv("../data/raw/zipcode.csv", sep=',', index_col=[0])
 searchfor = dash['City'].unique()
 pop['Alternate Names'] = pop['Alternate Names'].fillna('None')
@@ -103,5 +103,5 @@ searchfor = ["'s-Hertogenbosch",
              'Zoetermeer']
 final[final['city'].isin(searchfor)].reset_index(
     drop=True).to_csv('../app/costs.csv')
-dash = pd.read_csv('../data/processed/df_coo_pararius.csv', index_col=[0])
-dash.to_csv('../app/df_coo_pararius.csv')
+dash = pd.read_csv('../data/processed/df_pararius.csv', index_col=[0])
+dash.to_csv('../app/df_pararius.csv')

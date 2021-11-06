@@ -18,7 +18,7 @@ today = date.today()
 
 # read data
 df_pararius = pd.read_csv(
-    '../data/processed/df_coo_pararius.csv', index_col=[0])
+    '../data/processed/df_pararius.csv', index_col=[0])
 house_temp = pd.read_csv('../data/raw/house_temp.csv', index_col=[0])
 
 # get unique urls in each dataframe
@@ -143,6 +143,7 @@ result2 = result[[
     'longitude',
     'number-of-rooms',
     'Plaats',
+    'Provincie',
     'url',
     'date',
     'status',
@@ -164,5 +165,5 @@ result2 = result2.rename(columns={
     'Offered since': 'Offered',
     'Available': 'Available', })
 # Save
-# result2.to_csv('../data/processed/df_coo_pararius.csv')
-# house_temp.to_csv('../data/raw/house_temp.csv')
+result2.to_csv('../data/processed/df_pararius.csv')
+house_temp.to_csv('../data/raw/house_temp.csv')
