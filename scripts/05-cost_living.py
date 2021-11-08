@@ -18,17 +18,29 @@ city_nl['Alternate Names'] = city_nl['Alternate Names'].fillna('None')
 
 
 for i in par_cities:
+    """
+        for each city in the pararius database, it will check if there is a match
+        on the alternative names of all cities in the netherlands, if yes, it will
+        save the name of the city from ads to the all cities database
+    """
     city_nl.loc[city_nl['Alternate Names'].str.contains(i), 'city'] = i
 
+# Lorem
 cities_par_x_nl = list(set(par_cities) - set(city_nl['city']))
+# Lorem
 cities_not_listed = df_pararius[df_pararius['City'].isin(cities_par_x_nl)]
+# Lorem
 df_city_coord = pd.merge(cities_not_listed[['City', 'Price']], postcode[[
                          'Plaats', 'Provincie', 'longitude', 'latitude']], left_on='City', right_on='Plaats', how='left')
+# Lorem
 df_city_coord_val = df_city_coord.groupby(['City', 'Provincie'])[
     ['longitude', 'latitude']].mean().reset_index()
 
 
 def haversine(lat1, lon1, lat2, lon2):
+    """
+        calculate distance from 2 coordinates
+    """
     earth_radius = 6371
     lat1, lon1, lat2, lon2 = np.radians([lat1, lon1, lat2, lon2])
     a = np.sin((lat2-lat1)/2.0)**2 + np.cos(lat1) * \
