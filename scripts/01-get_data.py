@@ -170,7 +170,7 @@ df_pararius_2 = pd.DataFrame(description_2)
 
 # transforming all files into only one
 df_pararius = pd.concat([df_pararius_1, df_pararius_2], 1)
-df_pararius.to_csv(f'../data/processed/df_pararius.csv')
+df_pararius.to_csv(f"../data/processed/df_pararius.csv")
 
 # removing unwanted char
 df_pararius['surface-area'] = df_pararius['surface-area'].str.replace(
