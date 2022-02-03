@@ -1,3 +1,4 @@
+conda activate rents
 python 01-get_data.py
 python 02-coordinates.py
 python 03-calculation.py
