@@ -13,12 +13,12 @@ from bs4 import BeautifulSoup
 from datetime import date
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 today = date.today()
 
 # read data
-df_pararius = pd.read_csv(
-    '../data/processed/df_pararius.csv', index_col=[0])
+df_pararius = pd.read_csv('../data/processed/df_pararius.csv', index_col=[0])
 house_temp = pd.read_csv('../data/raw/house_temp.csv', index_col=[0])
 
 # get unique urls in each dataframe
@@ -40,19 +40,10 @@ def key_val(text):
 
 
 def scrape_web(url):
-    """
-        the purpose of the function is to scrape a page
-        it creates fake browser to do not getting blocked
-        then it transform the html into a string value
-    """
-    chrome_options = Options()
-    chrome_options.add_argument("--window-size=%s" % "1,1")
-    driver = webdriver.Chrome(
-        'temp/chromedriver', chrome_options=chrome_options)
-    driver.set_window_position(-10000, 0)
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver.implicitly_wait(30)
     driver.get(url)
-    html = driver.page_source
-    html_soup = BeautifulSoup(html)
+    html_soup = BeautifulSoup(driver.page_source, 'html.parser')
     driver.close()
     return html_soup
 

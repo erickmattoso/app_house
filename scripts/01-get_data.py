@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from datetime import date
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 # getting today date
@@ -18,27 +19,11 @@ today = date.today()
 
 
 def scrape_web(url):
-    """
-        the purpose of the function is to scrape a page
-        it creates fake browser to do not getting blocked
-        then it transform the html into a string value
-    """
-    # open options to add specifications
-    chrome_options = Options()
-    # add size of the browser to be invisible
-    chrome_options.add_argument("--window-size=%s" % "1,1")
-    # reads the chromedriver file with the options openning the browser
-    driver = webdriver.Chrome(
-        'temp/chromedriver', chrome_options=chrome_options)
-    # set a position to make the new browser be invisible
-    driver.set_window_position(-10000, 0)
-    # request the url status
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver.implicitly_wait(30)
     driver.get(url)
-    # transforms selenium to Beautiful Soup
-    html_soup = BeautifulSoup(driver.page_source)
-    # after getting the needed info, close browser
+    html_soup = BeautifulSoup(driver.page_source, 'html.parser')
     driver.close()
-    # return html page
     return html_soup
 
 
