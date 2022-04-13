@@ -130,3 +130,5 @@ dmypy.json
 
 # exclude data from source control by default
 /data/
+/zdata/
+/zscripts/
