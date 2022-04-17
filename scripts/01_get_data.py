@@ -31,24 +31,34 @@ def scrape(city, num_pages):
 
 
 chromedriver = ChromeDriverManager().install()
-
 my_links_list = []
 my_list = ["alkmaar", "almere", "amersfoort", "amstelveen", "amsterdam", "apeldoorn", "arnhem", "breda", "bussum", "delft", "dordrecht", "eindhoven", "gouda", "haarlem",
            "hilversum", "hoofddorp", "huizen", "leiden", "oegstgeest", "rijswijk", "rotterdam", "schiedam", "utrecht", "voorburg", "zaandam", "zeist", "zoetermeer", "den-bosch", "den-haag"]
-my_list.sort()
-for city in (my_list[:]):
+
+for city in (my_list):
     html_soup = scrape(city, 1)
-    try:
-        num_pages = int(html_soup.find_all(
-            'a', {"class": "pagination__link"})[0].text)
-    except:
-        num_pages = 1
+
+    # num of pages
+    total_de_add = html_soup.find_all(
+        'div', {"class": "search-list-header__title"})[0].text
+    total_de_add = [int(s) for s in total_de_add.split() if s.isdigit()][0]
+    num_pages = round(total_de_add/30)
+    print(city, num_pages)
+
+    # Get content from the first page
     my_links = html_soup.find_all(
         'a', {"class": "listing-search-item__link listing-search-item__link--depiction"})
     my_links_list.append(my_links)
+
     if num_pages > 1:
         for i in range(2, num_pages+1):
-            html_soup = scrape(city, num_pages)
+            try:
+                html_soup = scrape(city, i)
+                my_links = html_soup.find_all(
+                    'a', {"class": "listing-search-item__link listing-search-item__link--depiction"})
+                my_links_list.append(my_links)
+            except:
+                pass
 
 my_csv = []
 result = [item for sublist in my_links_list for item in sublist]
@@ -101,11 +111,18 @@ def del_files():
         os.remove(f)
 
 
-chromedriver = ChromeDriverManager().install()
+df_crawler = pd.read_csv('../data/processed/df_crawler.csv',
+                         index_col=[0]).drop_duplicates(['links'])
+base = pd.read_csv('../data/processed/all_content.csv',
+                   index_col=[0]).drop_duplicates(['link'])
+acti = pd.read_csv('../data/processed/my_links.csv',
+                   index_col=[0]).drop_duplicates(['links'])
 
 del_files()
 
-for my_link in list(df_crawler['links'])[:]:
+chromedriver = ChromeDriverManager().install()
+
+for my_link in list(df_crawler['links'][:]):
     transfer_title_list = []
     transfer_cores_list = []
     dimensions_title_list = []
@@ -230,12 +247,11 @@ for my_link in list(df_crawler['links'])[:]:
 
         df = pd.concat([df_title, df_location, df_price, df_link,
                        df_img, df1, df2, df3, df4, df5, df6, df7, df8], 1)
-
         file_name = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%s")
         df.to_csv(f'../data/temp/my_links_{file_name}.csv')
         driver.close()
     except:
-        print(my_link)
+        print('erro', my_link)
         driver.close()
         pass
 
@@ -253,13 +269,10 @@ col = (map(lambda x: x.lower(), col))
 col = list(col)
 df.columns = col
 
-base = pd.read_csv('../data/processed/all_content.csv', index_col=[0])
 DS = pd.concat([df, base], ignore_index=True)
-
 DS = DS[DS['link'].isin(list(acti['links']))]
 
 DS = DS.reset_index(drop=True)
 DS.to_csv('../data/processed/all_content.csv')
-del_files()
 os.remove('../data/processed/df_crawler.csv')
 os.remove('../data/processed/my_links.csv')
