@@ -77,12 +77,13 @@ for cep in cep_zip:
         print('#####################################', cep)
         pass
 # add new info into the housing dataframe
-zipcode_housing_coo = pd.merge(
+df_housing = pd.merge(
     df_housing, df_zipcode, how='left', on='postcode')
-col = (map(lambda x: x.lower(), zipcode_housing_coo.columns))
+col = (map(lambda x: x.lower(), df_housing.columns))
 col = list(col)
-zipcode_housing_coo.columns = col
-zipcode_housing_coo = zipcode_housing_coo.rename(columns={"plaats": "city"})
+df_housing.columns = col
+df_housing = df_housing.rename(columns={"plaats": "city"})
 # saving data
-zipcode_housing_coo.to_csv('../data/processed/df_housing.csv')
+df_housing.to_csv('../data/processed/df_housing.csv')
 df_zipcode.to_csv('../data/raw/zipcode.csv')
+print(len(df_housing))
