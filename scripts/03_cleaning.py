@@ -102,4 +102,5 @@ df_city_coord['image'] = "<a href=" + df_city_coord['url'] + " target='blank'><i
 
 # Save
 df_city_coord.to_csv('../data/processed/df_housing.csv')
+cost_living['distance'] = cost_living['distance'].astype(int)
 cost_living.drop(columns=['coordinates']).to_csv('../app/cost_living.csv')
